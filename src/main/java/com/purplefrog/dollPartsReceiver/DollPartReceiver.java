@@ -318,6 +318,8 @@ public class DollPartReceiver
     public static void main(String[] argv)
         throws IOException
     {
+        BasicConfigurator.configure();
+
         HttpRequestHandlerRegistry registry = new HttpRequestHandlerRegistry();
 
         int port = 4046;
