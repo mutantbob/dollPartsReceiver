@@ -260,6 +260,9 @@ public class DollPartReceiver
         throws JSONException, IOException
     {
         String dir = row.getString("directory");
+        if (dir.contains(".."))
+            throw new IOException("nope");
+
         int maxImageNumberKnown = row.getInt("maxImageNumberKnown");
         String data = row.getString("data");
 
