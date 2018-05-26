@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doll parts upload prototype</title>
+</head>
+<body>
+<h1>Doll parts upload prototype</h1>
+
+<a href="experiment">POST json to this URL</a>
+
+<hr>
+
+<form action="receiveDollPart" method="post" enctype="multipart/form-data">
+    upload file : <input name="image" type="file"/>
+    <br>
+    extra text : <input name="bacon" type="text" />
+    <br>
+    <input type="submit"> <input type="reset">
+</form>
+
+<div> last uploaded image: </div>
+
+<img src="dollPart">
+
+<hr>
+
+$sprites:{s|<table style="display:inline"><tr><td><img src="image?dir=$s.relativeURL.html$&idx=$s.imageNumber$"></td></tr>
+<tr><td>$s.relativeURL.html$ $s.imageNumber$</td></tr></table>
+}$
+
+
+</body>
+</html>
