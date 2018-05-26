@@ -190,12 +190,12 @@ public class DollPartReceiver
     }
 
     @WebMethod
-    public EntityAndHeaders experiment(@WebParam (name="fileUploadObjects") String json,
-                                       @WebParam(name="name")String contributor,
-                                       @WebParam(name="website")String webSite )
+    public synchronized EntityAndHeaders experiment(@WebParam (name="fileUploadObjects") String json,
+                                                    @WebParam(name="name")String contributor,
+                                                    @WebParam(name="website")String webSite )
         throws JSONException, IOException
     {
-        System.out.println("somebody gave me a \n"+json+"\n\n");
+        logger.trace("somebody gave me a \n"+json+"\n\n");
 
         JSONArray a = new JSONArray(json);
 
@@ -322,6 +322,8 @@ public class DollPartReceiver
         throws IOException
     {
         BasicConfigurator.configure();
+
+        LogManager.getLogger(HTMLTools.class).setLevel(Level.INFO);
 
         HttpRequestHandlerRegistry registry = new HttpRequestHandlerRegistry();
 
