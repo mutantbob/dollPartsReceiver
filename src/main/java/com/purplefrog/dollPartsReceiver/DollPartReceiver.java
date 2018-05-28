@@ -1,5 +1,6 @@
 package com.purplefrog.dollPartsReceiver;
 
+import com.google.common.collect.*;
 import com.purplefrog.apachehttpcliches.*;
 import com.purplefrog.httpcliches.*;
 import org.apache.commons.fileupload.*;
@@ -15,9 +16,9 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.regex.*;
+import java.util.stream.*;
 
 public class DollPartReceiver
     implements HttpRequestHandler
@@ -152,8 +153,11 @@ public class DollPartReceiver
         InputStream istr = getClass().getResourceAsStream("dollPartsReceiver.html");
         String html = Util2.slurp(new InputStreamReader(istr));
 
+        Collections.sort(sprites);
+
         ST st = new ST(HTMLEnabledObject.makeSTGroup(true, '$', '$'), html);
-        st.add("sprites", sprites);
+        Map<File, List<Sprite>> map = sprites.stream().collect(Collectors.groupingBy(o -> o.dir));
+        st.add("sprites", map.values());
 
         return EntityAndHeaders.plainPayload(200, st.render(), "text/html");
     }
@@ -318,6 +322,7 @@ public class DollPartReceiver
     {
         return new File(master, dir);
     }
+
     public static void main(String[] argv)
         throws IOException
     {
@@ -358,6 +363,7 @@ public class DollPartReceiver
 
 
     public class Sprite
+        implements Comparable<Sprite>
     {
 
         public final File dir;
@@ -392,6 +398,15 @@ public class DollPartReceiver
         public File getFile()
         {
             return new File(this.dir, imageNumber+".png");
+        }
+
+        @Override
+        public int compareTo(Sprite arg)
+        {
+            return ComparisonChain.start()
+                .compare(dir, arg.dir)
+                .compare(arg.imageNumber, imageNumber)
+                .result();
         }
     }
 

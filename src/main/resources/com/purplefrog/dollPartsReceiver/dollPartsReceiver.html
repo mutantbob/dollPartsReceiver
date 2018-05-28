@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Doll parts upload prototype</title>
+    <script>
+function alternatingBackgrounds()
+{
+    var nodes = document.getElementsByClassName("banana")
+    for (var i=0; i<nodes.length; i++) {
+        nodes[i].style.background= (i%2==0) ? "#fcc": "#ccf"
+    }
+}
+
+window.addEventListener("load", alternatingBackgrounds)
+    </script>
 </head>
 <body>
 <h1>Doll parts upload prototype</h1>
@@ -25,9 +36,9 @@
 
 <hr>
 
-$sprites:{s|<table style="display:inline"><tr><td><img src="image?dir=$s.relativeURL.html$&idx=$s.imageNumber$"></td></tr>
+$sprites:{multi|<span class="banana">$multi:{s|<table style="display:inline"><tr><td><img src="image?dir=$s.relativeURL.html$&idx=$s.imageNumber$"></td></tr>
 <tr><td>$s.relativeURL.html$ $s.imageNumber$</td></tr></table>
-}$
+}$</span>}$
 
 
 </body>
