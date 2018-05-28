@@ -194,6 +194,27 @@ public class DollPartReceiver
         return new EntityAndHeaders(200, en);
     }
 
+    @WebMethod(operationName = "catalog.json")
+    public EntityAndHeaders catalog_json()
+        throws JSONException
+    {
+        List<Sprite> copy;
+        synchronized (this) {
+            copy = new ArrayList<>(sprites);
+        }
+
+        JSONArray parts = new JSONArray();
+        for (Sprite sprite : copy) {
+            parts.put(sprite.toJSON());
+        }
+
+        JSONObject payload = new JSONObject();
+        payload.put("parts", parts);
+
+        return EntityAndHeaders.plainPayload(200, payload.toString(2), "application/json");
+    }
+
+
     @WebMethod
     public synchronized EntityAndHeaders experiment(@WebParam (name="fileUploadObjects") String json,
                                                     @WebParam(name="name")String contributor,
@@ -330,6 +351,7 @@ public class DollPartReceiver
         BasicConfigurator.configure();
 
         LogManager.getLogger(HTMLTools.class).setLevel(Level.INFO);
+        LogManager.getLogger(HTTPWorkerThread.class).setLevel(Level.INFO);
 
         HttpRequestHandlerRegistry registry = new HttpRequestHandlerRegistry();
 
@@ -408,6 +430,15 @@ public class DollPartReceiver
                 .compare(dir, arg.dir)
                 .compare(arg.imageNumber, imageNumber)
                 .result();
+        }
+
+        public JSONObject toJSON()
+            throws JSONException
+        {
+            JSONObject rval = new JSONObject();
+            rval.put("directory", getRelativeURL());
+            rval.put("imageNumber", imageNumber);
+            return rval;
         }
     }
 

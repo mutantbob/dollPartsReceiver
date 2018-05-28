@@ -18,7 +18,15 @@ window.addEventListener("load", alternatingBackgrounds)
 <body>
 <h1>Doll parts upload prototype</h1>
 
-<a href="experiment">POST json to this URL</a>
+<div><a href="catalog.json">catalog.json</a></div>
+<form action="experiment" method="post">
+    contributor : <input name="name" type="text"/>
+    <br>
+    web site : <input name="website" type="text" />
+    <textarea name="fileUploadObjects"></textarea>
+    <br>
+    <input type="submit"> <input type="reset">
+</form>
 
 <hr>
 
