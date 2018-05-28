@@ -15,6 +15,7 @@ import javax.jws.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.*;
@@ -378,7 +379,7 @@ public class DollPartReceiver
             this.mime = mime;
 
             File f = getFile();
-            FileOutputStream fw = new FileOutputStream(f);
+            OutputStream fw = Files.newOutputStream(f.toPath(), StandardOpenOption.CREATE_NEW);
             fw.write(png);
             fw.flush();
         }
