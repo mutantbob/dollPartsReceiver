@@ -154,13 +154,44 @@ public class DollPartReceiver
         InputStream istr = getClass().getResourceAsStream("dollPartsReceiver.html");
         String html = Util2.slurp(new InputStreamReader(istr));
 
-        Collections.sort(sprites);
+        Collection<List<Sprite>> spritesForST1;
+        if (false) {
+            spritesForST1 = groupedByDirectory(sprites, true);
+        } else {
+            spritesForST1 = sortedByDate(sprites, true);
+        }
+        Collection<List<Sprite>> spritesForST = spritesForST1;
 
         ST st = new ST(HTMLEnabledObject.makeSTGroup(true, '$', '$'), html);
-        Map<File, List<Sprite>> map = sprites.stream().collect(Collectors.groupingBy(o -> o.dir));
-        st.add("sprites", map.values());
+        st.add("sprites", spritesForST);
 
         return EntityAndHeaders.plainPayload(200, st.render(), "text/html");
+    }
+
+    public static Collection<List<Sprite>> sortedByDate(List<Sprite> sprites, boolean newestFirst)
+    {
+        Collection<List<Sprite>> spritesForST;
+        List<Sprite> xx = new ArrayList<>(sprites);
+        if (newestFirst) {
+            Comparator<Sprite> cmp = Comparator.comparingLong(a -> a.getFile().lastModified());
+            cmp = Collections.reverseOrder(cmp);
+            Collections.sort(xx, cmp);
+        } else {
+            Collections.reverse(xx);
+        }
+        spritesForST = Arrays.asList(xx);
+        return spritesForST;
+    }
+
+    public static Collection<List<Sprite>> groupedByDirectory(List<Sprite> sprites, boolean newestFirst)
+    {
+        Collection<List<Sprite>> spritesForST;
+        Comparator<? super Sprite> yin = Comparator.naturalOrder();
+        Comparator<? super Sprite> yang = Comparator.reverseOrder();
+        Collections.sort(sprites, newestFirst ? yin : yang);
+        Map<File, List<Sprite>> map = sprites.stream().collect(Collectors.groupingBy(o -> o.dir));
+        spritesForST = map.values();
+        return spritesForST;
     }
 
     @WebMethod
